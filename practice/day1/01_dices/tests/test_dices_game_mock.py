@@ -1,42 +1,34 @@
-from mockito import mock, times, verify, when, ANY
-
+from unittest.mock import Mock, patch
 from app import *
 
 
-def test_player_looses_when_he_played_non_winning_score(monkeypatch):
-    game = RollDiceGame()
-    when(Dice).roll().thenReturn(5)
-    player = mocked_player_with_bet(game, 1)
-
-    game.play()
-
-    verify(player, times(1)).take(Chip(3))
-    verify(player, times(0)).win(ANY)
+def test_player_looses_when_he_played_non_winning_score():
+    with patch.object(Dice, "roll", return_value=5):
+        game = RollDiceGame()
+        player = mocked_player_with_bet(game, 1)
+        game.play()
+    player.take.assert_called_once_with(Chip(3))
+    player.win.assert_not_called()
 
 
-def test_player_wins_when_he_played_winning_score(monkeypatch):
-    game = RollDiceGame()
-    when(Dice).roll().thenReturn(5)
-    player = mocked_player_with_bet(game, 5)
-
-    game.play()
-
-    verify(player, times(1)).take(Chip(3))
-    verify(player, times(1)).win(Chip(18))
+def test_player_wins_when_he_played_winning_score():
+    with patch.object(Dice, "roll", return_value=5):
+        game = RollDiceGame()
+        player = mocked_player_with_bet(game, 5)
+        game.play()
+    player.take.assert_called_once_with(Chip(3))
+    player.win.assert_called_once_with(Chip(18))
 
 
-### private functions to set up test data
+# private functions to set up test data
 
-def mocked_player() -> player:
-    player = mock(Player)
-    when(player).has(ANY).thenReturn(True)
-    when(player).join(ANY).doNothing()
-    when(player).take(ANY).doNothing()
-    when(player).win(ANY).doNothing()
+def mocked_player() -> Player:
+    player = Mock(spec=Player)
+    player.has.return_value = True
     return player
 
 
-def mocked_player_with_bet(game:RollDiceGame, bet_score: int) -> player:
+def mocked_player_with_bet(game: RollDiceGame, bet_score: int) -> Player:
     player = mocked_player()
     player.join(game)
     game.bet(player, Bet(Chip(3), bet_score))
