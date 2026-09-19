@@ -63,8 +63,8 @@ def test_player_can_not_bet_if_he_did_not_buy_chips():
 def test_player_looses_when_he_played_non_existing_score():
     player = player_with_five_chips()
     game = game_with_player(player)
-
     game.bet(player, Bet(Chip(3), 7))
+    
     game.play()
 
     assert player_has_exactly_chips(player, Chip(2))
