@@ -1,0 +1,9 @@
+.venv/
+.claude/
+.pytest_cache/
+
+*.pyc
+.cache
+.coverage
+.idea/
+*.iml
