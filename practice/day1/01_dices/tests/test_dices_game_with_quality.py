@@ -5,7 +5,8 @@ from app.Exceptions.too_many_players_exception import TooManyPlayersException
 
 
 def test_player_is_in_game_when_he_joined_game():
-    player = player_joined_game()
+    player = Player()  
+    player.join(game)
 
     assert player.is_in_game()
 
@@ -62,8 +63,7 @@ def test_player_can_not_bet_if_he_did_not_buy_chips():
 
 def test_player_looses_when_he_played_non_existing_score():
     player = player_with_five_chips()
-    game = game_with_player(player)
-    game.bet(player, Bet(Chip(3), 7))
+    game = game_with_bet(player, Bet(Chip(3), 7))
     
     game.play()
 
@@ -92,6 +92,13 @@ def player_with_five_chips() -> player:
 def game_with_player(player: Player) -> roll_dice_game:
     game = RollDiceGame()
     player.join(game)
+    return game
+
+
+def game_with_bet(player: Player, bet: Bet) -> RollDiceGame:
+    game = RollDiceGame()
+    player.join(game)
+    game.bet(player, bet)
     return game
 
 
