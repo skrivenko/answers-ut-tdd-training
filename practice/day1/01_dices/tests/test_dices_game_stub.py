@@ -1,44 +1,42 @@
 from app import *
 
 
-def test_player_looses_when_he_played_non_winning_score(monkeypatch):
+def test_player_looses_when_he_played_non_winning_score():
     player = player_with_five_chips()
-    game = game_with_player(player)
-    game.bet(player, Bet(Chip(3), 2))
+    game = game_with_bet(player, 2)
     Dice.roll = staticmethod(lambda: 5)
-
+    
     game.play()
-
+    
     assert player_has_exactly_chips(player, Chip(2))
 
 
-def test_player_wins_when_he_played_winning_score(monkeypatch):
+def test_player_wins_when_he_played_winning_score():
     player = player_with_five_chips()
-    game = game_with_player(player)
-    game.bet(player, Bet(Chip(3), 5))
+    game = game_with_bet(player, 5)
     Dice.roll = staticmethod(lambda: 5)
-
+    
     game.play()
+    
+    assert player_has_exactly_chips(player, Chip(2 + 3 * 6))
 
-    assert player_has_exactly_chips(player, Chip(2 + 3*6))
 
+# private functions to set up test data and to assert
 
-### private functions to set up test data and to assert
-
-def player_with_five_chips() -> player:
-    player = Player()  
+def player_with_five_chips() -> Player:
+    player = Player()
     player.buy(Chip(5))
     return player
 
 
-def game_with_player(player: Player) -> roll_dice_game:
+def game_with_bet(player: Player, score: int) -> RollDiceGame:
     game = RollDiceGame()
     player.join(game)
+    game.bet(player, Bet(Chip(3), score))
     return game
-    
+
 
 def player_has_exactly_chips(player: Player, chips: Chip) -> bool:
-    return player.has(chips) and not player.has(chips + Chip(1))   
-
+    return player.has(chips) and not player.has(chips + Chip(1))
 
 
