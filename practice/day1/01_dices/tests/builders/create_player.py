@@ -13,6 +13,11 @@ class CreatePlayer:
     def joined_game(self, game : RollDiceGame):
         self._player.join(game)
         return self
+
+    
+    def joined_new_game(self):
+        self._player.join(RollDiceGame())
+        return self
     
     
     def with_five_chips(self):
