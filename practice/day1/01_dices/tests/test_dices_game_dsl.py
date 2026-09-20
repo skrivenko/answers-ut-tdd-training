@@ -14,7 +14,7 @@ THREE_CHIPS_ON_7 = Bet(Chip(3), 7)
 
 
 def test_player_is_in_game_when_he_joined_game():
-    player = Create.player().joined_game(RollDiceGame()).please() 
+    player = Create.player().joined_new_game().please() 
 
     assert player.is_in_game()
 
@@ -40,7 +40,7 @@ def test_seventh_player_can_not_join_game_since_six_is_max():
 
 
 def test_player_is_not_in_game_when_he_joined_and_left_game():
-    player = Create.player().joined_game(RollDiceGame()).please() 
+    player = Create.player().joined_new_game().please() 
     player.leave_game()
 
     assert not player.is_in_game()
@@ -55,10 +55,10 @@ def test_player_can_not_leave_game_if_he_did_not_join_it():
 
 
 def test_player_has_chips_when_he_bought_them():
-    player = Create.player().joined_game(RollDiceGame()).please() 
+    player = Create.player().joined_new_game().please() 
     player.buy(FIVE_CHIPS)
 
-    Assert.player_has_exactly_chips(player, TWO_CHIPS)
+    Assert.player_has_exactly_chips(player, FIVE_CHIPS)
     
 
 def test_player_can_not_bet_if_he_did_not_buy_chips():
